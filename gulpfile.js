@@ -19,8 +19,15 @@ const gulp = require('gulp'),
     browserSync = require('browser-sync').create(),
     babel = require('gulp-babel'),
     jsImport = require('gulp-js-import'),
-    svgSprite = require('gulp-svg-sprite');
+    svgSprite = require('gulp-svg-sprite'),
+    gulpIf = require('gulp-if'),
+    eslint = require('gulp-eslint'),
+    flow = require('gulp-flowtype');
 
+function isFixed(file) {
+    // Has ESLint fixed the file contents?
+    return file.eslint != null && file.eslint.fixed;
+}
 
 // запуск сервера
 gulp.task('server', function() {
@@ -46,6 +53,11 @@ gulp.task('server', function() {
         './js/**/*.js'
     ], ['babel']);
 
+    gulp.watch([
+        './scripts/**/*.js'
+    ], ['lint']);
+
+    gulp.watch(['./sass/**/*'], ['lint-css']);
     gulp.watch('./sass/**/*', ['sass']);
     gulp.watch('./scripts/**/*', ['import']);
 });
@@ -60,7 +72,6 @@ gulp.task('import', function() {
 });
 
 
-
 // babel
 gulp.task('babel',['import'],function() {
     return gulp.src('./js/**/index.js')
@@ -70,20 +81,21 @@ gulp.task('babel',['import'],function() {
         .pipe(gulp.dest('js'))
 });
 
-//fix scss
+//fix stylelint
 
-gulp.task('fix-css', function fixCssTask() {
+gulp.task('lint-css', function lintCssTask() {
     const gulpStylelint = require('gulp-stylelint');
 
     return gulp
-        .src('./sass/**/*.scss')
+        .src(['./sass/**/*.scss', './sass/**/*.sass'])
         .pipe(gulpStylelint({
-            fix: true
-        }))
-        .pipe(gulp.dest('src'));
+            reporters: [
+                {formatter: 'string', console: true}
+            ]
+        }));
 });
 
-//style  fix-csslint
+// fix-csslint
 gulp.task('fix-css', function fixCssTask() {
     const gulpStylelint = require('gulp-stylelint');
 
@@ -93,6 +105,42 @@ gulp.task('fix-css', function fixCssTask() {
             fix: true
         }))
         .pipe(gulp.dest('sass'));
+});
+
+//eslint
+gulp.task('lint', function () {
+    // ESLint ignores files with "node_modules" paths.
+    // So, it's best to have gulp ignore the directory as well.
+    // Also, Be sure to return the stream from the task;
+    // Otherwise, the task may end before the stream has finished.
+    return gulp.src(['./scripts/**.js','!node_modules/**'])
+        // eslint() attaches the lint output to the "eslint" property
+        // of the file object so it can be used by other modules.
+        .pipe(eslint({fix:true}))
+        // eslint.format() outputs the lint results to the console.
+        // Alternatively use eslint.formatEach() (see Docs).
+        .pipe(eslint.format())
+        // if fixed, write the file to dest
+        .pipe(gulpIf(isFixed, gulp.dest('../test/fixtures')))
+        // To have the process exit with an error code (1) on
+        // lint error, return the stream and pipe to failAfterError
+        // last.
+        .pipe(eslint.failAfterError());
+});
+
+//flow
+gulp.task('typecheck', function() {
+    return gulp.src('./*.js')
+        .pipe(flow({
+            all: false,
+            weak: false,
+            declarations: './declarations',
+            killFlow: false,
+            beep: true,
+            abort: false
+        }))
+        .pipe(react({ stripTypes: true })) // Strip Flow type annotations before compiling
+        .pipe(gulp.dest('./out'));
 });
 // компіляція sass/scss в css
 gulp.task('sass', function() {
@@ -204,7 +252,7 @@ gulp.task('deploy', function() {
 // sass - для компіляції sass в css, тому що браузер
 // не розуміє попередній синтаксис,
 // fileinclude - для того щоб з маленьких шаблонів зібрати повну сторінку
-gulp.task('default', ['server','import','babel','sass','fileinclude']);
+gulp.task('default', ['server','import','babel','sass','fileinclude','lint']);
 
 // при виклику команди gulp production
 // будуть стиснуті всі ресурси в папку public
