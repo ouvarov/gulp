@@ -141,7 +141,7 @@ gulp.task('fileinclude', function() {
 
 // compression svg, png, jpeg
 gulp.task('minify:img', function() {
-    // беремо всі картинки крім папки де лежать картинки для спрайту
+    //we take all the pictures except the folder where the pictures are for the sprite
     return gulp.src(['./images/**/*', '!./images/sprite/*'])
         .pipe(imagemin().on('error', gutil.log))
         .pipe(gulp.dest('./public/images/'));
