@@ -1,10 +1,9 @@
-$('').click(function () {
-  $('').toggleClass('is-active');
-  $('').toggleClass('is-hidden');
+$('ee').click(function () {
+    $('ee').toggleClass('is-active');
+    $('eee').toggleClass('is-hidden');
 });
-
-
 
 [1, 2, 3, 5].map((n) => n + 1);
 
-console.log('1235');
+[1, 2, 3, 5].map((n) => n + 1);
+console.log('12356');

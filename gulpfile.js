@@ -4,11 +4,8 @@ const gulp = require('gulp'),
     gutil = require('gulp-util'),
     clean = require('gulp-clean'),
     merge = require('merge-stream'),
-    concat = require('gulp-concat'),
     notify = require('gulp-notify'),
-    rename = require("gulp-rename"),
     uglify = require('gulp-uglify'),
-    connect = require('gulp-connect'),
     ghPages = require('gulp-gh-pages'),
     imagemin = require('gulp-imagemin'),
     sourcemaps = require('gulp-sourcemaps'),
@@ -21,15 +18,14 @@ const gulp = require('gulp'),
     jsImport = require('gulp-js-import'),
     svgSprite = require('gulp-svg-sprite'),
     gulpIf = require('gulp-if'),
-    eslint = require('gulp-eslint'),
-    flow = require('gulp-flowtype');
+    eslint = require('gulp-eslint');
 
 function isFixed(file) {
     // Has ESLint fixed the file contents?
     return file.eslint != null && file.eslint.fixed;
 }
 
-// запуск сервера
+// start the server
 gulp.task('server', function() {
     browserSync.init({
         server: {
@@ -62,18 +58,15 @@ gulp.task('server', function() {
     gulp.watch('./scripts/**/*', ['import']);
 });
 
-
-
-// импорт js
+// import js
 gulp.task('import', function() {
     return gulp.src('scripts/index.js')
         .pipe(jsImport({hideConsole: true}))
         .pipe(gulp.dest('js'));
 });
 
-
 // babel
-gulp.task('babel',['import'],function() {
+gulp.task('babel',function() {
     return gulp.src('./js/**/index.js')
         .pipe(babel({
             presets: ['@babel/env']
@@ -81,8 +74,7 @@ gulp.task('babel',['import'],function() {
         .pipe(gulp.dest('js'))
 });
 
-//fix stylelint
-
+//stylelint
 gulp.task('lint-css', function lintCssTask() {
     const gulpStylelint = require('gulp-stylelint');
 
@@ -128,21 +120,7 @@ gulp.task('lint', function () {
         .pipe(eslint.failAfterError());
 });
 
-//flow
-gulp.task('typecheck', function() {
-    return gulp.src('./*.js')
-        .pipe(flow({
-            all: false,
-            weak: false,
-            declarations: './declarations',
-            killFlow: false,
-            beep: true,
-            abort: false
-        }))
-        .pipe(react({ stripTypes: true })) // Strip Flow type annotations before compiling
-        .pipe(gulp.dest('./out'));
-});
-// компіляція sass/scss в css
+// compiling sass / scss into css
 gulp.task('sass', function() {
     gulp.src(['./sass/**/*.scss', './sass/**/*.sass'])
         .pipe(sourcemaps.init())
@@ -156,7 +134,7 @@ gulp.task('sass', function() {
         .pipe(browserSync.stream());
 });
 
-// збірка сторінки з шаблонів
+// build a page from templates
 gulp.task('fileinclude', function() {
     gulp.src('./pages/**/*.html')
         .pipe(fileinclude({
@@ -167,7 +145,7 @@ gulp.task('fileinclude', function() {
         .pipe(gulp.dest('./'))
 });
 
-// зтиснення svg, png, jpeg
+// compression svg, png, jpeg
 gulp.task('minify:img', function() {
     // беремо всі картинки крім папки де лежать картинки для спрайту
     return gulp.src(['./images/**/*', '!./images/sprite/*'])
@@ -175,7 +153,7 @@ gulp.task('minify:img', function() {
         .pipe(gulp.dest('./public/images/'));
 });
 
-// зтиснення css
+// compression css
 gulp.task('minify:css', function() {
     gulp.src('./css/**/*.css')
         .pipe(autoprefixer({
@@ -186,14 +164,14 @@ gulp.task('minify:css', function() {
         .pipe(gulp.dest('./public/css/'));
 });
 
-// зтиснення js
+// compression js
 gulp.task('minify:js', function() {
     gulp.src('./js/**/index.js')
         .pipe(uglify())
         .pipe(gulp.dest('./public/js/'));
 });
 
-// зтиснення html
+// compression html
 gulp.task('minify:html', function() {
     var opts = {
         conditionals: true,
@@ -205,12 +183,12 @@ gulp.task('minify:html', function() {
         .pipe(gulp.dest('./public/'));
 });
 
-// видалити папку public
+// delete folder public
 gulp.task('clean', function() {
     return gulp.src('./public', { read: false }).pipe(clean());
 });
 
-// створення спрайту з картинок з папки images/sprite
+// create a picture sprite from the images / sprite folder
 gulp.task('sprite', function() {
     var spriteData = gulp.src('images/sprite/*.png').pipe(
         spritesmith({
@@ -228,7 +206,8 @@ gulp.task('sprite', function() {
 
     return merge(imgStream, cssStream);
 });
-//svg spite сделать svg спрайт
+
+//svg spite
 gulp.task('svgSprite', function () {
     return gulp.src('images/sprite_src/*.svg') // svg files for sprite
         .pipe(svgSprite({
@@ -242,20 +221,20 @@ gulp.task('svgSprite', function () {
         .pipe(gulp.dest('images/sprite_src'));
 });
 
-// публікація на gh-pages
+// publication on gh-pages
 gulp.task('deploy', function() {
     return gulp.src('./public/**/*').pipe(ghPages());
 });
 
-// при виклику в терміналі команди gulp, буде запущені задачі
-// server - для запупуску сервера,
-// sass - для компіляції sass в css, тому що браузер
-// не розуміє попередній синтаксис,
-// fileinclude - для того щоб з маленьких шаблонів зібрати повну сторінку
+// when called in the gulp command terminal, tasks will be started
+// server - to start the server,
+// sass - to compile sass into css because the browser
+// does not understand the previous syntax,
+// fileinclude - to assemble a full page from small templates
 gulp.task('default', ['server','import','babel','sass','fileinclude','lint']);
 
-// при виклику команди gulp production
-// будуть стиснуті всі ресурси в папку public
-// після чого командою gulp deploy їх можна опублікувати на github
+// when calling the gulp production command
+// all resources will be compressed into the public folder
+// then the gulp deploy command can publish them to github
 gulp.task('production', ['minify:html', 'minify:css', 'minify:js', 'minify:img']);
 //test scss npx stylelint "**/*.scss"
