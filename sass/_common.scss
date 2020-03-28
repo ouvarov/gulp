@@ -13,9 +13,6 @@
         font-size: $size+px;
     }
 }
-
-
-
 @mixin InputMono-Regular($weight,$size) {
     color: #fff;
     font-size: ($size/1280*100) + vw;
@@ -26,6 +23,7 @@
 @mixin col($col) {
     width: (100%/12*$col);
 }
+
 body {
     background: red;
 }

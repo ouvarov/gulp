@@ -8,6 +8,7 @@
   },
 
   "env": {
+    "commonjs": true,
     "es6": true,
     "node": true,
     "jquery": true
@@ -18,7 +19,7 @@
   ],
 
   "globals": {
-    "docu'import/first'ment": "writable",
+    "document": "readonly",
     "navigator": "readonly",
     "window": "readonly"
   },
@@ -196,7 +197,6 @@
     "wrap-iife": ["error", "any", { "functionPrototypeMethods": true }],
     "yield-star-spacing": ["error", "both"],
     "yoda": ["error", "never"],
-
     "node/no-deprecated-api": "error",
     "node/process-exit-as-throw": "error",
 

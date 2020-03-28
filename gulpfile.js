@@ -17,13 +17,9 @@ const gulp = require('gulp'),
     babel = require('gulp-babel'),
     jsImport = require('gulp-js-import'),
     svgSprite = require('gulp-svg-sprite'),
-    gulpIf = require('gulp-if'),
-    eslint = require('gulp-eslint');
+    eslint = require('gulp-eslint'),
+    minify = require('gulp-minify');
 
-function isFixed(file) {
-    // Has ESLint fixed the file contents?
-    return file.eslint != null && file.eslint.fixed;
-}
 
 // start the server
 gulp.task('server', function() {
@@ -62,6 +58,7 @@ gulp.task('server', function() {
 gulp.task('import', function() {
     return gulp.src('scripts/index.js')
         .pipe(jsImport({hideConsole: true}))
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('js'));
 });
 
@@ -105,19 +102,16 @@ gulp.task('lint', function () {
     // So, it's best to have gulp ignore the directory as well.
     // Also, Be sure to return the stream from the task;
     // Otherwise, the task may end before the stream has finished.
-    return gulp.src(['./scripts/**.js','!node_modules/**'])
-        // eslint() attaches the lint output to the "eslint" property
-        // of the file object so it can be used by other modules.
-        .pipe(eslint({fix:true}))
-        // eslint.format() outputs the lint results to the console.
-        // Alternatively use eslint.formatEach() (see Docs).
-        .pipe(eslint.format())
-        // if fixed, write the file to dest
-        .pipe(gulpIf(isFixed, gulp.dest('../test/fixtures')))
-        // To have the process exit with an error code (1) on
-        // lint error, return the stream and pipe to failAfterError
-        // last.
-        .pipe(eslint.failAfterError());
+    return gulp.src(['./scripts/**.js'])
+      // eslint() attaches the lint output to the "eslint" property
+      // of the file object so it can be used by other modules.
+      .pipe(eslint())
+      // eslint.format() outputs the lint results to the console.
+      // Alternatively use eslint.formatEach() (see Docs).
+      .pipe(eslint.format())
+      // To have the process exit with an error code (1) on
+      // lint error, return the stream and pipe to failAfterError last.
+      .pipe(eslint.failAfterError());
 });
 
 // compiling sass / scss into css
@@ -167,8 +161,13 @@ gulp.task('minify:css', function() {
 // compression js
 gulp.task('minify:js', function() {
     gulp.src('./js/**/index.js')
-        .pipe(uglify())
-        .pipe(gulp.dest('./public/js/'));
+      .pipe(minify({
+        ext:{
+          min:'.js'
+        },
+        noSource: true
+      }))
+        .pipe(gulp.dest('./public/js/'))
 });
 
 // compression html
