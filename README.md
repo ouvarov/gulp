@@ -12,30 +12,36 @@
    
 ```php
    gulp.task('server', function() {
-        browserSync.init({
-            server: {
-                baseDir: "./"
-            },
-            port: "7777"
-        });
-        gulp.watch(['./**/*.html']).on('change', browserSync.reload);
-        gulp.watch('./js/**/*.js').on('change', browserSync.reload);
-        gulp.watch('./scripts/**/*.js').on('change', browserSync.reload);
-        gulp.watch([
-            './templates/**/*.html',
-            './pages/**/*.html'
-        ], ['fileinclude']);
-        gulp.watch([
-            './scripts/**/*.js',
-            './js/**/*.js'
-        ], ['babel']);
-        gulp.watch([
-            './scripts/**/*.js'
-        ], ['lint']);
-        gulp.watch(['./sass/**/*'], ['lint-css']);
-        gulp.watch('./sass/**/*', ['sass']);
-        gulp.watch('./scripts/**/*', ['import']);
-    });
+       browserSync.init({
+           server: {
+               baseDir: "./"
+           },
+           port: "7777"
+       });
+   
+       gulp.watch(['./**/*.html']).on('change', browserSync.reload);
+       gulp.watch('./js/**/*.js').on('change', browserSync.reload);
+       gulp.watch('./scripts/**/*', ['import'],).on('change', browserSync.reload);
+       gulp.watch('./scripts/**/*.js').on('change', browserSync.reload);
+   
+   
+       gulp.watch([
+           './templates/**/*.html',
+           './pages/**/*.html'
+       ], ['fileinclude']);
+   
+       gulp.watch([
+           './scripts/**/*.js',
+           './js/**/*.js'
+       ], ['babel']);
+   
+       gulp.watch([
+           './scripts/**/*.js'
+       ], ['lint']);
+   
+       gulp.watch(['./sass/**/*'], ['lint-css']);
+       gulp.watch('./sass/**/*', ['sass']);
+   });
  ```
     
 **Include Js file**
@@ -134,13 +140,13 @@ gulp.task('import', function() {
    Babel is a toolchain that is mainly used to convert ECMAScript 2015+ code into a backwards compatible version of JavaScript in current and older browsers or environments.
    
    ```php
-   gulp.task('babel',function() {
-        return gulp.src('./js/**/index.js')
-            .pipe(babel({
-                presets: ['@babel/env']
-            }))
-            .pipe(gulp.dest('js'))
-    });
+   gulp.task('babel',['import'],function() {
+       return gulp.src('./js/**/index.js')
+           .pipe(babel({
+               presets: ['@babel/env']
+           }))
+           .pipe(gulp.dest('js'))
+   });
 ```
     
     

@@ -32,6 +32,7 @@ gulp.task('server', function() {
 
     gulp.watch(['./**/*.html']).on('change', browserSync.reload);
     gulp.watch('./js/**/*.js').on('change', browserSync.reload);
+    gulp.watch('./scripts/**/*', ['import'],).on('change', browserSync.reload);
     gulp.watch('./scripts/**/*.js').on('change', browserSync.reload);
 
 
@@ -51,7 +52,6 @@ gulp.task('server', function() {
 
     gulp.watch(['./sass/**/*'], ['lint-css']);
     gulp.watch('./sass/**/*', ['sass']);
-    gulp.watch('./scripts/**/*', ['import']);
 });
 
 // import js
@@ -63,7 +63,7 @@ gulp.task('import', function() {
 });
 
 // babel
-gulp.task('babel',function() {
+gulp.task('babel',['import'],function() {
     return gulp.src('./js/**/index.js')
         .pipe(babel({
             presets: ['@babel/env']
