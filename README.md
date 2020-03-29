@@ -35,7 +35,8 @@
         gulp.watch(['./sass/**/*'], ['lint-css']);
         gulp.watch('./sass/**/*', ['sass']);
         gulp.watch('./scripts/**/*', ['import']);
-    });```
+    });
+ ```
     
 **Include Js file**
 
@@ -43,12 +44,14 @@
     
    All files are in folder scripts and include in file index.js. Include build all file in folder js/index.js. Сan be connected in mode_modules files
    
-    `gulp.task('import', function() {
+```php
+gulp.task('import', function() {
          return gulp.src('scripts/index.js')
              .pipe(jsImport({hideConsole: true}))
              .pipe(sourcemaps.write())
              .pipe(gulp.dest('js'));
-     });`
+     });
+  ```
     
     
 **Include sass/scss**
@@ -57,7 +60,8 @@
   
    All files are in folder sass include in style.scss/sass and have prefix _file.scss/sass. include folder css/style.css
    
-   `gulp.task('sass', function() {
+   ```php
+   gulp.task('sass', function() {
         gulp.src(['./sass/**/*.scss', './sass/**/*.sass'])
             .pipe(sourcemaps.init())
             .pipe(
@@ -68,7 +72,8 @@
             .pipe(sourcemaps.write())
             .pipe(gulp.dest('./css/'))
             .pipe(browserSync.stream());
-    });`
+    });
+ ```
     
 **Stylelint**
     
@@ -76,7 +81,8 @@
     
    Нou can customize the code style in the file .stylelintrc
    
-   `gulp.task('lint-css', function lintCssTask() {
+   ```php
+   gulp.task('lint-css', function lintCssTask() {
         const gulpStylelint = require('gulp-stylelint');
         return gulp
             .src(['./sass/**/*.scss', './sass/**/*.sass'])
@@ -86,7 +92,7 @@
                 ]
             }));
     });
-`
+```
 
 **Fix stylelint**
 
@@ -94,7 +100,8 @@
     
    Use this command for fix code style scss/sass
    
-   `gulp.task('fix-css', function fixCssTask() {
+   ```php
+   gulp.task('fix-css', function fixCssTask() {
         const gulpStylelint = require('gulp-stylelint');
         return gulp
             .src(['./sass/**/*.scss', './sass/**/*.sass'])
@@ -102,7 +109,8 @@
                 fix: true
             }))
             .pipe(gulp.dest('sass'));
-    });`
+    });
+ ```
     
 **eslint**
 
@@ -110,12 +118,14 @@
     
    Нou can customize the code style in the file .eslintrc and add ignore file in .eslintignore
    
-   `gulp.task('lint', function () {
+   ```php
+   gulp.task('lint', function () {
         return gulp.src(['./scripts/**.js'])
           .pipe(eslint())
           .pipe(eslint.format())
           .pipe(eslint.failAfterError());
-    });` 
+    });
+ ```
     
 **Babel**
 
@@ -123,13 +133,15 @@
     
    Babel is a toolchain that is mainly used to convert ECMAScript 2015+ code into a backwards compatible version of JavaScript in current and older browsers or environments.
    
-   `gulp.task('babel',function() {
+   ```php
+   gulp.task('babel',function() {
         return gulp.src('./js/**/index.js')
             .pipe(babel({
                 presets: ['@babel/env']
             }))
             .pipe(gulp.dest('js'))
-    });` 
+    });
+```
     
     
 **Include html**
@@ -138,7 +150,8 @@
     
    All files are in folder templates. Includes in folder pages/**.index, use prefix '@@" @@include('../templates/**.html') first file should be index.html
    
-   `gulp.task('fileinclude', function() {
+   ```php
+   gulp.task('fileinclude', function() {
         gulp.src('./pages/**/*.html')
             .pipe(fileinclude({
                 prefix: '@@',
@@ -146,7 +159,8 @@
             }).on('error', gutil.log))
             .on('error', notify.onError())
             .pipe(gulp.dest('./'))
-    });`
+    });
+  ```
     
    use https://www.npmjs.com/package/gulp-file-include#api
 
@@ -156,13 +170,13 @@
     
     gulp minify:img
     
-    `gulp.task('minify:img', function() {
+    ```php
+    gulp.task('minify:img', function() {
          //we take all the pictures except the folder where the pictures are for the sprite
          return gulp.src(['./images/**/*', '!./images/sprite/*'])
              .pipe(imagemin().on('error', gutil.log))
              .pipe(gulp.dest('./public/images/'));
-     });
-`
+     });```
     
    compresses file in images/**/*
    
@@ -172,7 +186,8 @@
     
    Make folder public it delimits files compressed for the project use gulp minify:html, minify:css, minify:js, minify:img
    
-    `gulp.task('production', ['minify:html', 'minify:css', 'minify:js', 'minify:img']);`
+    ```php
+    gulp.task('production', ['minify:html', 'minify:css', 'minify:js', 'minify:img']);```
     
     
 **Publication on gh-pages**
