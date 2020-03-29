@@ -10,7 +10,7 @@
     
    server watch on scripts/**.js,sass/**.scss/.sass,templates/**.html use eslint stylelint buble
    
-   // js code
+  `
    gulp.task('server', function() {
         browserSync.init({
             server: {
@@ -35,7 +35,7 @@
         gulp.watch(['./sass/**/*'], ['lint-css']);
         gulp.watch('./sass/**/*', ['sass']);
         gulp.watch('./scripts/**/*', ['import']);
-    });
+    });`
     
 **Include Js file**
 
