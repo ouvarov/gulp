@@ -177,7 +177,7 @@ gulp.task('import', function() {
              .pipe(imagemin().on('error', gutil.log))
              .pipe(gulp.dest('./public/images/'));
      });
-    ```
+   ```
     
    compresses file in images/**/*
    
