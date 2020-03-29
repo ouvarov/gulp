@@ -11,7 +11,6 @@
    server watch on scripts/**.js,sass/**.scss/.sass,templates/**.html use eslint stylelint buble
    
 ```php
-//php code
    gulp.task('server', function() {
         browserSync.init({
             server: {
