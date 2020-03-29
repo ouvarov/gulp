@@ -170,8 +170,8 @@ gulp.task('import', function() {
     
     gulp minify:img
     
-    ```php
-    gulp.task('minify:img', function() {
+   ```php
+   gulp.task('minify:img', function() {
          //we take all the pictures except the folder where the pictures are for the sprite
          return gulp.src(['./images/**/*', '!./images/sprite/*'])
              .pipe(imagemin().on('error', gutil.log))
@@ -187,11 +187,11 @@ gulp.task('import', function() {
     
    Make folder public it delimits files compressed for the project use gulp minify:html, minify:css, minify:js, minify:img
    
+
     ```php
-    
     gulp.task('production', ['minify:html', 'minify:css', 'minify:js', 'minify:img']);
-     ```
-    
+   
+    ```
     
 **Publication on gh-pages**
 
