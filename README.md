@@ -176,7 +176,8 @@ gulp.task('import', function() {
          return gulp.src(['./images/**/*', '!./images/sprite/*'])
              .pipe(imagemin().on('error', gutil.log))
              .pipe(gulp.dest('./public/images/'));
-     });```
+     });
+    ```
     
    compresses file in images/**/*
    
@@ -187,7 +188,9 @@ gulp.task('import', function() {
    Make folder public it delimits files compressed for the project use gulp minify:html, minify:css, minify:js, minify:img
    
     ```php
-    gulp.task('production', ['minify:html', 'minify:css', 'minify:js', 'minify:img']);```
+    
+    gulp.task('production', ['minify:html', 'minify:css', 'minify:js', 'minify:img']);
+     ```
     
     
 **Publication on gh-pages**
