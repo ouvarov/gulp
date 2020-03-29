@@ -2,7 +2,7 @@
 
 **Instal**
 
-    npm i
+    npm сi
  
 **Run server**
 
