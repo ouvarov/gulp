@@ -4,28 +4,123 @@
     }
 }
 
-@mixin InputMono-Bold($weight,$size) {
-    color: #fff;
-    font-size: ($size/1280*100) + vw;
+@mixin InputMono-Regular($weight, $size, $color) {
+    color: $color;
+    font-size: $size;
     font-weight: $weight;
-    font-family: 'InputMono-Bold';
-    @include media(1280) {
-        font-size: $size+px;
+}
+
+$tablet: 1023px;
+$mobile: 767px;
+$small-mobile: 499px;
+
+@mixin respond-to($media) {
+    @if $media == tablet {
+        @media (max-width: $tablet) {
+            @content;
+        }
+    }
+    @else if $media == mobile {
+        @media (max-width: $mobile) {
+            @content;
+        }
+    }
+    @else if $media == small-mobile {
+        @media (max-width: $small-mobile) {
+            @content;
+        }
     }
 }
-@mixin InputMono-Regular($weight,$size) {
-    color: #fff;
-    font-size: ($size/1280*100) + vw;
-    font-weight: $weight;
-    font-family: 'InputMono-Regular';
+
+@mixin flex ($type: flex-start, $direction: row) {
+    display: flex;
+    @if $type == flex-start {
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+    @else if $type == center {
+        justify-content: center;
+        align-items: center;
+    }
+    @else if $type == between-center {
+        justify-content: space-between;
+        align-items: center;
+    }
+    @else if $type == around-center {
+        justify-content: space-around;
+        align-items: center;
+    }
+    @else if $type == around-end {
+        justify-content: space-around;
+        align-items: flex-end;
+    }
+    @else if $type == between-end {
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    @else if $type == end {
+        justify-content: flex-end;
+        align-items: flex-end;
+    }
+    @else if $type == end-center {
+        justify-content: flex-end;
+        align-items: center;
+    }
+    @else if $type == start-center {
+        justify-content: flex-start;
+        align-items: center;
+    }
+    @if $direction == column {
+        flex-direction: column;
+    }
+    @else if $direction == reverse {
+        flex-direction: row-reverse;
+    }
+    @else if $direction == column-reverse {
+        flex-direction: column-reverse;
+    }
+    flex-direction: $direction;
+}
+
+@mixin triangle($direction, $size: 6px, $color: #222) {
+    @if ($direction == 'up') {
+        border: $size solid transparent;
+        border-bottom: $size solid $color;
+    }
+    @else if ($direction == 'down') {
+        border: $size solid transparent;
+        border-top: $size solid $color;
+    }
+    @else if ($direction == 'left') {
+        border: $size solid transparent;
+        border-right: $size solid $color;
+    }
+    @else if ($direction == 'right') {
+        border: $size solid transparent;
+        border-left: $size solid $color;
+    }
+}
+
+@mixin pseudo-element($pseudo-element: after, $content: '', $position: absolute) {
+    &:#{$pseudo-element} {
+        content: $content;
+        position: $position;
+        display: block;
+        @content;
+    }
+    @if ($pseudo-element == all) {
+        &:after,
+        &:before {
+            content: $content;
+            position: $position;
+            display: block;
+            @content;
+        }
+    }
 }
 
 @mixin col($col) {
     width: (100%/12*$col);
-}
-
-body {
-    background: red;
 }
 
 .col-1 {
