@@ -32,7 +32,7 @@
     "prettier": "^1.18.2",
     "prettier-eslint": "^9.0.1",
     "spritesmith": "^3.1.0",
-    "stylelint": "^13.2.1",
+    "stylelint": "^15.10.1",
     "stylelint-config-standard": "^20.0.0"
   },
   "dependencies": {
